@@ -1,0 +1,830 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radagon Systems — AI Consulting & Implementation</title>
+<meta name="description" content="Radagon Systems helps businesses identify, implement, and scale AI automation. Phased, ROI-driven, built by experts.">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Roboto:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-bright: #F0C040;
+  --gold-dim: #7A6030;
+  --gold-glow: rgba(201,168,76,0.35);
+  --ash: #1A1612;
+  --stone: #0E0C0A;
+  --fog: #2A2218;
+  --parchment: #D4C9A8;
+  --parchment-dim: #9A8F72;
+  --grace: #E8D48B;
+  --light-border: rgba(201,168,76,0.15);
+  --mid-border: rgba(201,168,76,0.3);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--stone);
+  color: var(--parchment);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* noise grain */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:9998; opacity:.6;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:#080604; }
+::-webkit-scrollbar-thumb { background:var(--gold-dim); }
+
+/* ══ CURSOR ══ */
+* { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Cpath d='M9 0L11 7L18 9L11 11L9 18L7 11L0 9L7 7Z' fill='%23C9A84C' opacity='0.85'/%3E%3C/svg%3E") 9 9, crosshair; }
+
+/* ══ NAV ══ */
+nav {
+  position:fixed; top:0; width:100%; z-index:1000;
+  background:rgba(8,6,4,0.96);
+  border-bottom:1px solid var(--light-border);
+  backdrop-filter:blur(12px);
+  padding:0 5%;
+  display:flex; align-items:center; justify-content:space-between;
+  height:66px;
+  transition:background .3s;
+}
+nav.scrolled { background:rgba(5,4,3,0.99); }
+
+.nav-logo {
+  font-family:'Cinzel Decorative', serif;
+  font-size:1rem; letter-spacing:.06em;
+  color:var(--gold);
+  text-decoration:none;
+  display:flex; align-items:center; gap:12px;
+}
+.nav-logo-mark {
+  width:30px; height:30px;
+  border:1.5px solid var(--gold);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.8rem;
+  animation:pulseGold 3.5s ease-in-out infinite;
+}
+@keyframes pulseGold {
+  0%,100%{ box-shadow:0 0 6px var(--gold-glow); }
+  50%{ box-shadow:0 0 18px rgba(201,168,76,0.55), 0 0 36px rgba(201,168,76,0.18); }
+}
+
+.nav-links { display:flex; align-items:center; gap:2.2rem; list-style:none; }
+.nav-links a {
+  font-family:'Cinzel', serif;
+  font-size:.65rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--parchment-dim); text-decoration:none;
+  transition:color .3s; position:relative;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-3px; left:0; right:0;
+  height:1px; background:var(--gold);
+  transform:scaleX(0); transform-origin:center; transition:transform .3s;
+}
+.nav-links a:hover { color:var(--gold); }
+.nav-links a:hover::after { transform:scaleX(1); }
+
+.nav-cta {
+  font-family:'Cinzel', serif;
+  font-size:.65rem; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--ash); background:var(--gold);
+  border:none; padding:.5rem 1.3rem;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+  cursor:pointer; transition:all .3s;
+}
+.nav-cta:hover {
+  background:var(--gold-bright);
+  box-shadow:0 0 22px rgba(201,168,76,0.45);
+}
+
+/* ══ HERO ══ */
+#hero {
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+  padding:8rem 5% 5rem;
+  text-align:center;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 38%, rgba(201,168,76,0.055) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 70% at 15% 85%, rgba(100,30,0,0.14) 0%, transparent 55%),
+    linear-gradient(170deg, #050302 0%, #0E0C0A 45%, #14100A 100%);
+}
+.hero-erdtree {
+  position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:700px; height:550px; pointer-events:none;
+  background:radial-gradient(ellipse 28% 75% at 50% 100%, rgba(201,168,76,0.07) 0%, transparent 70%);
+  filter:blur(3px);
+}
+.hero-fog {
+  position:absolute; bottom:0; left:0; right:0; height:220px;
+  background:linear-gradient(0deg, var(--stone) 0%, transparent 100%);
+  pointer-events:none;
+}
+.hero-top-rule {
+  position:absolute; top:78px; left:50%; transform:translateX(-50%);
+  width:260px; height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);
+}
+.hero-top-rule::before,.hero-top-rule::after {
+  content:'✦'; position:absolute; top:-7px;
+  color:var(--gold); font-size:.55rem;
+}
+.hero-top-rule::before{ left:-10px; }
+.hero-top-rule::after{ right:-10px; }
+
+.hero-inner { position:relative; z-index:1; max-width:800px; }
+
+.hero-eyebrow {
+  font-family:'Cinzel', serif;
+  font-size:.62rem; letter-spacing:.35em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:1.4rem;
+  opacity:0; animation:fadeUp .8s .3s forwards;
+}
+.hero-title {
+  font-family:'Cinzel Decorative', serif;
+  font-size:clamp(2.4rem,6.5vw,5.2rem);
+  font-weight:900; line-height:1.08;
+  color:var(--gold);
+  text-shadow:0 0 60px rgba(201,168,76,0.38),0 0 120px rgba(201,168,76,0.12),2px 3px 0 rgba(0,0,0,0.7);
+  margin-bottom:1.2rem;
+  opacity:0; animation:fadeUp .8s .5s forwards;
+}
+.hero-tagline {
+  font-family:'Cinzel', serif;
+  font-size:clamp(.78rem,1.4vw,.95rem);
+  letter-spacing:.14em; color:var(--parchment-dim);
+  margin-bottom:.6rem;
+  opacity:0; animation:fadeUp .8s .65s forwards;
+}
+.hero-rule {
+  width:180px; height:1px; margin:1.4rem auto;
+  background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);
+  opacity:0; animation:fadeUp .8s .75s forwards;
+}
+.hero-desc {
+  font-size:clamp(.95rem,1.5vw,1.1rem);
+  font-weight:300; color:var(--parchment-dim);
+  line-height:1.85; max-width:560px; margin:0 auto 2.8rem;
+  opacity:0; animation:fadeUp .8s .85s forwards;
+}
+.hero-btns {
+  display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;
+  opacity:0; animation:fadeUp .8s 1s forwards;
+}
+
+.btn-gold {
+  font-family:'Cinzel', serif;
+  font-size:.68rem; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--ash); background:var(--gold);
+  border:none; padding:.9rem 2.4rem;
+  clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+  cursor:pointer; transition:all .35s;
+  box-shadow:0 0 28px rgba(201,168,76,0.22);
+}
+.btn-gold:hover {
+  background:var(--gold-bright);
+  box-shadow:0 0 44px rgba(201,168,76,0.48);
+  transform:translateY(-2px);
+}
+.btn-outline {
+  font-family:'Cinzel', serif;
+  font-size:.68rem; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--gold); background:transparent;
+  border:1px solid var(--gold-dim); padding:.9rem 2.4rem;
+  clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+  cursor:pointer; transition:all .35s;
+}
+.btn-outline:hover {
+  border-color:var(--gold);
+  background:rgba(201,168,76,0.07);
+  transform:translateY(-2px);
+}
+
+@keyframes fadeUp {
+  from{ opacity:0; transform:translateY(22px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+/* ══ SECTION SHARED ══ */
+section { padding:6rem 5%; }
+.container { max-width:1080px; margin:0 auto; }
+
+.section-header { text-align:center; margin-bottom:3.5rem; }
+.section-eyebrow {
+  font-family:'Cinzel', serif;
+  font-size:.6rem; letter-spacing:.38em; text-transform:uppercase;
+  color:var(--gold); display:block; margin-bottom:.9rem;
+}
+.section-title {
+  font-family:'Cinzel Decorative', serif;
+  font-size:clamp(1.5rem,3.5vw,2.4rem);
+  color:var(--gold);
+  text-shadow:0 0 38px rgba(201,168,76,0.18);
+  margin-bottom:.9rem;
+}
+.section-rule {
+  width:140px; height:1px; margin:1rem auto;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  position:relative;
+}
+.section-rule::before {
+  content:'❖'; position:absolute; top:-7px;
+  left:50%; transform:translateX(-50%);
+  color:var(--gold); font-size:.5rem;
+}
+.section-sub {
+  font-size:.95rem; font-weight:300;
+  color:var(--parchment-dim); max-width:520px;
+  margin:0 auto; line-height:1.85;
+}
+
+/* reveal */
+.reveal { opacity:0; transform:translateY(26px); transition:opacity .7s ease,transform .7s ease; }
+.reveal.visible { opacity:1; transform:none; }
+
+/* ══ HOW IT WORKS ══ */
+#how {
+  background:linear-gradient(180deg,var(--stone) 0%,var(--fog) 50%,var(--stone) 100%);
+  position:relative;
+}
+#how::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 65% 50% at 50% 50%,rgba(201,168,76,0.04) 0%,transparent 70%);
+  pointer-events:none;
+}
+.steps { display:grid; grid-template-columns:repeat(3,1fr); gap:0; position:relative; }
+.steps::before {
+  content:''; position:absolute;
+  top:52px; left:17%; right:17%; height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold-dim),transparent);
+}
+.step { text-align:center; padding:2.5rem 2rem; }
+.step-num {
+  width:52px; height:52px;
+  border:1.5px solid var(--gold); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 1.5rem;
+  font-family:'Cinzel Decorative', serif; font-size:1rem;
+  color:var(--gold); background:var(--stone);
+  box-shadow:0 0 18px var(--gold-glow);
+  position:relative; z-index:1; transition:all .4s;
+}
+.step:hover .step-num {
+  box-shadow:0 0 30px rgba(201,168,76,0.5);
+  background:rgba(201,168,76,0.08);
+}
+.step-title {
+  font-family:'Cinzel', serif;
+  font-size:.85rem; letter-spacing:.1em;
+  color:var(--gold); margin-bottom:.7rem;
+}
+.step-desc {
+  font-size:.9rem; font-weight:300;
+  color:var(--parchment-dim); line-height:1.8;
+}
+
+/* ══ SERVICES ══ */
+#services { background:var(--stone); }
+.services-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; }
+
+.service-card {
+  background:linear-gradient(140deg,rgba(26,22,14,0.92) 0%,rgba(10,8,5,0.96) 100%);
+  border:1px solid var(--light-border);
+  padding:2.4rem; position:relative; overflow:hidden;
+  transition:all .4s;
+}
+.service-card::after {
+  content:''; position:absolute; top:0; right:0;
+  width:36px; height:36px;
+  border-top:2px solid var(--gold-dim); border-right:2px solid var(--gold-dim);
+  transition:all .4s;
+}
+.service-card:hover { border-color:var(--mid-border); transform:translateY(-3px); box-shadow:0 10px 44px rgba(0,0,0,0.4),0 0 18px rgba(201,168,76,0.09); }
+.service-card:hover::after { border-color:var(--gold); }
+.service-card.featured { border-color:rgba(201,168,76,0.32); background:linear-gradient(140deg,rgba(38,28,10,0.92) 0%,rgba(18,14,5,0.96) 100%); }
+
+.service-phase {
+  font-family:'Cinzel', serif;
+  font-size:.58rem; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--gold-dim); margin-bottom:.55rem;
+}
+.service-name {
+  font-family:'Cinzel', serif;
+  font-size:1rem; letter-spacing:.04em;
+  color:var(--gold); margin-bottom:.4rem;
+}
+.service-price {
+  font-family:'Cinzel Decorative', serif;
+  font-size:1.35rem; color:var(--gold-bright);
+  margin-bottom:.9rem;
+  text-shadow:0 0 18px rgba(240,192,64,0.28);
+}
+.service-desc {
+  font-size:.9rem; font-weight:300;
+  color:var(--parchment-dim); line-height:1.78; margin-bottom:1.1rem;
+}
+.service-list { list-style:none; border-top:1px solid rgba(201,168,76,0.1); padding-top:.9rem; }
+.service-list li {
+  font-size:.82rem; font-weight:300;
+  color:var(--parchment-dim); padding:.22rem 0 .22rem 1.1rem; position:relative;
+}
+.service-list li::before {
+  content:'❖'; position:absolute; left:0;
+  color:var(--gold-dim); font-size:.45rem;
+  top:50%; transform:translateY(-50%);
+}
+
+/* ══ CASE STUDIES ══ */
+#cases { background:linear-gradient(180deg,var(--stone) 0%,#080604 50%,var(--stone) 100%); }
+.cases-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.8rem; }
+
+.case-card {
+  border:1px solid var(--light-border); overflow:hidden;
+  background:rgba(12,10,7,0.85); transition:all .4s;
+}
+.case-card:hover { border-color:rgba(201,168,76,0.38); box-shadow:0 14px 52px rgba(0,0,0,0.45),0 0 22px rgba(201,168,76,0.07); }
+.case-head {
+  background:linear-gradient(135deg,#1A1208 0%,#0E0C06 100%);
+  padding:1.3rem 2rem;
+  border-bottom:1px solid var(--light-border);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.case-label {
+  font-family:'Cinzel', serif;
+  font-size:.58rem; letter-spacing:.28em; text-transform:uppercase; color:var(--gold);
+}
+.case-tag {
+  font-family:'Cinzel', serif; font-size:.56rem; letter-spacing:.1em;
+  color:var(--ash); background:var(--gold-dim);
+  padding:.18rem .65rem;
+  clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);
+}
+.case-body { padding:1.8rem 2rem; }
+.case-title {
+  font-family:'Cinzel', serif;
+  font-size:.95rem; letter-spacing:.04em;
+  color:var(--grace); margin-bottom:.7rem;
+}
+.case-text {
+  font-size:.88rem; font-weight:300;
+  color:var(--parchment-dim); line-height:1.82;
+}
+.case-stat {
+  margin-top:1.1rem; padding-top:.9rem;
+  border-top:1px solid rgba(201,168,76,0.1);
+  font-family:'Cinzel', serif; font-size:.68rem;
+  letter-spacing:.1em; color:var(--gold);
+}
+
+/* ══ ABOUT ══ */
+#about { background:var(--stone); }
+.about-text {
+  font-size:1rem; font-weight:300;
+  color:var(--parchment-dim); line-height:1.95;
+  max-width:680px; margin:0 auto 3.5rem; text-align:center;
+}
+.team-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+.team-card {
+  background:linear-gradient(175deg,rgba(24,20,12,0.85) 0%,rgba(10,8,5,0.92) 100%);
+  border:1px solid var(--light-border);
+  padding:1.8rem 1.4rem; text-align:center; transition:all .4s;
+}
+.team-card:hover {
+  border-color:var(--mid-border);
+  transform:translateY(-4px);
+  box-shadow:0 8px 28px rgba(0,0,0,0.35);
+}
+.team-icon {
+  width:44px; height:44px;
+  border:1px solid var(--gold-dim); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto .9rem; font-size:1.1rem;
+  color:var(--gold); background:rgba(201,168,76,0.04);
+  transition:all .4s;
+}
+.team-card:hover .team-icon { box-shadow:0 0 18px var(--gold-glow); border-color:var(--gold); }
+.team-role {
+  font-family:'Cinzel', serif;
+  font-size:.66rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:.45rem;
+}
+.team-org {
+  font-size:.83rem; font-weight:300;
+  color:var(--parchment-dim); line-height:1.6;
+}
+
+/* ══ CONTACT ══ */
+#contact {
+  background:linear-gradient(180deg,var(--stone) 0%,#060504 100%);
+  position:relative;
+}
+#contact::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 55% 55% at 50% 85%,rgba(201,168,76,0.04) 0%,transparent 70%);
+  pointer-events:none;
+}
+.contact-inner { max-width:620px; margin:0 auto; position:relative; }
+.contact-form {
+  background:rgba(12,10,7,0.75);
+  border:1px solid rgba(201,168,76,0.2);
+  padding:3rem; position:relative;
+}
+.contact-form::before { content:''; position:absolute; top:-1px; left:-1px; width:18px; height:18px; border-top:2px solid var(--gold); border-left:2px solid var(--gold); }
+.contact-form::after  { content:''; position:absolute; bottom:-1px; right:-1px; width:18px; height:18px; border-bottom:2px solid var(--gold); border-right:2px solid var(--gold); }
+
+.form-row { margin-bottom:1.4rem; }
+.form-2col { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.form-label {
+  display:block; font-family:'Cinzel', serif;
+  font-size:.58rem; letter-spacing:.26em; text-transform:uppercase;
+  color:var(--gold-dim); margin-bottom:.45rem;
+}
+.form-input,.form-textarea {
+  width:100%;
+  background:rgba(22,18,10,0.85);
+  border:1px solid rgba(201,168,76,0.18);
+  color:var(--parchment);
+  font-family:'Roboto', sans-serif; font-weight:300; font-size:.92rem;
+  padding:.8rem 1rem; transition:all .3s; outline:none; resize:none;
+}
+.form-input:focus,.form-textarea:focus {
+  border-color:var(--gold);
+  background:rgba(35,28,12,0.85);
+  box-shadow:0 0 12px rgba(201,168,76,0.1);
+}
+.form-input::placeholder,.form-textarea::placeholder {
+  color:rgba(138,125,90,0.35); font-style:italic;
+}
+.form-submit {
+  width:100%; font-family:'Cinzel', serif;
+  font-size:.68rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--ash);
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);
+  border:none; padding:1rem;
+  clip-path:polygon(14px 0%,100% 0%,calc(100% - 14px) 100%,0% 100%);
+  cursor:pointer; transition:all .4s; margin-top:.4rem;
+  box-shadow:0 0 26px rgba(201,168,76,0.2);
+}
+.form-submit:hover { box-shadow:0 0 46px rgba(201,168,76,0.42); transform:translateY(-2px); }
+.contact-note {
+  text-align:center; margin-top:1.4rem;
+  font-size:.82rem; font-weight:300; color:var(--parchment-dim);
+}
+
+/* ══ FOOTER ══ */
+footer {
+  background:#040302;
+  border-top:1px solid rgba(201,168,76,0.08);
+  padding:2.8rem 5%; text-align:center;
+}
+.footer-logo {
+  font-family:'Cinzel Decorative', serif;
+  font-size:1rem; color:var(--gold-dim); margin-bottom:.4rem;
+}
+.footer-rule {
+  width:70px; height:1px; margin:.65rem auto;
+  background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);
+}
+.footer-text {
+  font-size:.75rem; font-weight:300;
+  color:rgba(138,125,90,0.45);
+}
+
+/* ══ RUNE PARTICLES ══ */
+.rune-p {
+  position:fixed; font-family:'Cinzel Decorative', serif;
+  color:var(--gold); opacity:0; pointer-events:none;
+  user-select:none; z-index:1;
+  animation:floatRune linear infinite;
+}
+@keyframes floatRune {
+  0%{ transform:translateY(100vh) rotate(0deg); opacity:0; }
+  8%{ opacity:.12; }
+  92%{ opacity:.08; }
+  100%{ transform:translateY(-8vh) rotate(360deg); opacity:0; }
+}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:768px){
+  nav { padding:0 5%; }
+  .nav-links { display:none; }
+  .services-grid,.cases-grid,.team-grid,.steps { grid-template-columns:1fr; }
+  .form-2col { grid-template-columns:1fr; }
+  .steps::before { display:none; }
+  .contact-form { padding:2rem 1.5rem; }
+  section { padding:4rem 5%; }
+}
+</style>
+</head>
+<body>
+
+<div id="rune-layer"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">
+    <div class="nav-logo-mark">✦</div>
+    Radagon Systems
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">Approach</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#cases">Case Studies</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book a Call</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-erdtree"></div>
+  <div class="hero-fog"></div>
+  <div class="hero-top-rule"></div>
+  <div class="hero-inner">
+    <p class="hero-eyebrow">✦ &nbsp; AI Consulting &amp; Implementation &nbsp; ✦</p>
+    <h1 class="hero-title">Radagon<br>Systems</h1>
+    <p class="hero-tagline">Identify. Build. Scale.</p>
+    <div class="hero-rule"></div>
+    <p class="hero-desc">
+      We help businesses implement AI that delivers measurable results —
+      through a phased, low-risk approach built around your operations,
+      not a generic off-the-shelf product.
+    </p>
+    <div class="hero-btns">
+      <button class="btn-gold" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book a Discovery Call</button>
+      <button class="btn-outline" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">View Services</button>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">✦ Our Methodology ✦</span>
+      <h2 class="section-title">How We Work</h2>
+      <div class="section-rule"></div>
+      <p class="section-sub">Three phases designed to minimize risk, maximize ROI, and keep you in control at every stage.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">I</div>
+        <h3 class="step-title">Audit &amp; Discovery</h3>
+        <p class="step-desc">We analyze your existing workflows, tools, and pain points to identify where AI automation will generate the highest return — before any development begins.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">II</div>
+        <h3 class="step-title">Pilot &amp; Validation</h3>
+        <p class="step-desc">We build one or two targeted automations from the audit findings, deployed in your live environment, to demonstrate measurable value before full commitment.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">III</div>
+        <h3 class="step-title">Full Implementation</h3>
+        <p class="step-desc">With a validated approach and defined scope, we build out the complete automation stack — integrated, tested, and handed over with full documentation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">✦ What We Offer ✦</span>
+      <h2 class="section-title">Services</h2>
+      <div class="section-rule"></div>
+      <p class="section-sub">Structured engagements with clear scope, defined deliverables, and no ambiguity.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card featured reveal">
+        <div class="service-phase">Phase 01 — Start Here</div>
+        <h3 class="service-name">AI Audit &amp; Opportunity Mapping</h3>
+        <div class="service-price">$500</div>
+        <p class="service-desc">A structured analysis of your business operations to identify where AI automation creates real, quantifiable value. The foundation every engagement is built on.</p>
+        <ul class="service-list">
+          <li>End-to-end workflow analysis</li>
+          <li>Prioritized automation opportunities by ROI and effort</li>
+          <li>Recommended tech stack and implementation roadmap</li>
+          <li>30-minute strategy review call</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-phase">Phase 02 — Proof of Value</div>
+        <h3 class="service-name">Pilot Automation</h3>
+        <div class="service-price">$2,000</div>
+        <p class="service-desc">Targeted automation of one or two high-impact processes from the audit — built and deployed in your environment so you can see ROI before scaling.</p>
+        <ul class="service-list">
+          <li>Live automation in your production environment</li>
+          <li>Quantified before/after performance benchmarks</li>
+          <li>Full technical documentation and handover</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-phase">Phase 03 — Full Scale</div>
+        <h3 class="service-name">Full Implementation</h3>
+        <div class="service-price">$8,000 – $12,000</div>
+        <p class="service-desc">The complete automation suite, scoped precisely after the audit and proven through the pilot. No scope creep. No budget surprises. Delivered on agreed milestones.</p>
+        <ul class="service-list">
+          <li>Full automation stack per the discovery roadmap</li>
+          <li>Native integrations with your existing tools</li>
+          <li>Comprehensive QA, testing, and deployment</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-phase">Phase 04 — Post-Launch</div>
+        <h3 class="service-name">Post-Deployment Support</h3>
+        <div class="service-price">$400</div>
+        <p class="service-desc">A 30-day support window after go-live covering bug fixes, performance monitoring, and minor adjustments. New features are a separate engagement.</p>
+        <ul class="service-list">
+          <li>30-day post-launch stabilization window</li>
+          <li>Bug fixes and performance tuning</li>
+          <li>Excludes new feature development</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section id="cases">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">✦ Track Record ✦</span>
+      <h2 class="section-title">Case Studies</h2>
+      <div class="section-rule"></div>
+      <p class="section-sub">A selection of problems we have solved and the results that followed.</p>
+    </div>
+    <div class="cases-grid">
+      <div class="case-card reveal">
+        <div class="case-head">
+          <span class="case-label">Case Study 01</span>
+          <span class="case-tag">Knowledge & AI</span>
+        </div>
+        <div class="case-body">
+          <h3 class="case-title">Corpus AI — Theological Knowledge Distillation Platform</h3>
+          <p class="case-text">A research platform needed to make a large, multi-lingual theological corpus accessible to non-specialist users. We built an AI pipeline that ingested source documents, extracted key concepts, and surfaced contextually relevant summaries on demand — with adaptive reading levels and citation tracing throughout.</p>
+          <div class="case-stat">⟡ Delivered in 6 weeks, audit to launch</div>
+        </div>
+      </div>
+      <div class="case-card reveal">
+        <div class="case-head">
+          <span class="case-label">Case Study 02</span>
+          <span class="case-tag">Healthcare & Automation</span>
+        </div>
+        <div class="case-body">
+          <h3 class="case-title">MedClaim AI — Medical Billing & Denial Management</h3>
+          <p class="case-text">A mid-sized healthcare provider was losing significant revenue to claim denials and manual billing errors. We built an automated billing pipeline that cross-referenced patient records against ICD-10 and CPT codes, flagged high-risk submissions before they were sent, and generated denial appeal drafts in seconds — fully integrated with their existing EHR platform at zero downtime.</p>
+          <div class="case-stat">⟡ 34% reduction in claim denials within 60 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">✦ The Team ✦</span>
+      <h2 class="section-title">About Radagon Systems</h2>
+      <div class="section-rule"></div>
+    </div>
+    <p class="about-text reveal">
+      We are a cross-disciplinary AI consultancy with hands-on experience across enterprise software, healthcare systems, consumer products, and frontier research. Our approach is grounded in a simple principle: understand the business before writing a single line of code. Every engagement begins with discovery, not assumptions.
+    </p>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-icon">⚗</div>
+        <div class="team-role">AI &amp; ML Lead</div>
+        <div class="team-org">Samsung Innovation Labs — applied AI and machine learning</div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-icon">⚡</div>
+        <div class="team-role">IoT &amp; Systems Engineering</div>
+        <div class="team-org">Torch Systems — wildfire detection via LoRa sensor networks</div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-icon">◈</div>
+        <div class="team-role">Enterprise Product</div>
+        <div class="team-org">Salesforce Marketplace — enterprise plugin development</div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-icon">✦</div>
+        <div class="team-role">Consumer Product</div>
+        <div class="team-org">Calo — leading AI-driven meal planning platform, Riyadh</div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-icon">⚖</div>
+        <div class="team-role">Business Analysis</div>
+        <div class="team-org">UK law firms — process design and systems analysis</div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-icon">✚</div>
+        <div class="team-role">Digital Implementation</div>
+        <div class="team-org">NHS — national-scale healthcare digital transformation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">✦ Get In Touch ✦</span>
+      <h2 class="section-title">Contact Us</h2>
+      <div class="section-rule"></div>
+      <p class="section-sub">Tell us about your business and the challenges you are looking to solve. We typically respond within 24 hours.</p>
+    </div>
+    <div class="contact-inner">
+      <div class="contact-form reveal">
+        <div class="form-2col form-row">
+          <div>
+            <label class="form-label">Your Name</label>
+            <input class="form-input" type="text" placeholder="Full name">
+          </div>
+          <div>
+            <label class="form-label">Company</label>
+            <input class="form-input" type="text" placeholder="Organisation">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" placeholder="you@company.com">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" rows="5" placeholder="Describe your current workflows, the tools you use, and where you feel the most friction..."></textarea>
+        </div>
+        <button class="form-submit" id="submit-btn">Send Message</button>
+      </div>
+      <p class="contact-note reveal">Prefer a call? Mention it in your message and we will send a booking link.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Radagon Systems</div>
+  <div class="footer-rule"></div>
+  <p class="footer-text">© 2025 Radagon Systems &nbsp;·&nbsp; AI Consulting &amp; Implementation &nbsp;·&nbsp; All rights reserved</p>
+</footer>
+
+<script>
+// Rune particles
+const RUNES = ['ᚠ','ᚢ','ᚦ','ᚨ','ᚱ','ᚲ','ᚷ','ᚹ','ᚾ','ᛁ','ᛃ','ᛇ','ᛈ','ᛉ','ᛊ','ᛏ','ᛒ','ᛖ','ᛗ','ᛚ','ᛟ'];
+const layer = document.getElementById('rune-layer');
+for(let i=0;i<16;i++){
+  const el=document.createElement('div');
+  el.className='rune-p';
+  el.textContent=RUNES[Math.floor(Math.random()*RUNES.length)];
+  el.style.cssText=`left:${Math.random()*100}%;font-size:${0.55+Math.random()*.7}rem;animation-duration:${14+Math.random()*22}s;animation-delay:${Math.random()*18}s;`;
+  layer.appendChild(el);
+}
+
+// Scroll reveal
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// Nav scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
+});
+
+// Form feedback
+document.getElementById('submit-btn').addEventListener('click',function(e){
+  e.preventDefault();
+  const orig=this.textContent;
+  this.textContent='✦  Message Sent  ✦';
+  this.style.background='linear-gradient(135deg,#3a6b2e 0%,#52993e 100%)';
+  this.style.color='#fff';
+  setTimeout(()=>{
+    this.textContent=orig;
+    this.style.background='';
+    this.style.color='';
+  },3000);
+});
+</script>
+</body>
+</html>
