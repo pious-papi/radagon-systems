@@ -832,11 +832,14 @@ contactForm.addEventListener('submit',function(e){
   ];
   const subject='New Contact Form Submission';
   const mailto=`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
-  window.location.href=mailto;
   const orig=submitBtn.textContent;
   submitBtn.textContent='✦  Opening Email Client  ✦';
   submitBtn.style.background='linear-gradient(135deg,#3a6b2e 0%,#52993e 100%)';
   submitBtn.style.color='#fff';
+  const mailtoWindow=window.open(mailto);
+  if(!mailtoWindow){
+    window.location.href=mailto;
+  }
   setTimeout(()=>{
     submitBtn.textContent=orig;
     submitBtn.style.background='';
