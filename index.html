@@ -756,7 +756,7 @@ footer {
       <p class="section-sub">Tell us about your business and the challenges you are looking to solve. We typically respond within 24 hours.</p>
     </div>
     <div class="contact-inner">
-      <form class="contact-form reveal" id="contact-form" action="mailto:contact@radagon.systems" method="post" enctype="text/plain">
+      <form class="contact-form reveal" id="contact-form">
         <div class="form-2col form-row">
           <div>
             <label class="form-label" for="contact-name">Your Name</label>
@@ -831,9 +831,9 @@ contactForm.addEventListener('submit',function(e){
   ];
   const subject='New Contact Form Submission';
   const mailto=`mailto:contact@radagon.systems?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
-  window.location.href=mailto;
+  window.open(mailto,'_blank');
   const orig=submitBtn.textContent;
-  submitBtn.textContent='✦  Email Draft Ready  ✦';
+  submitBtn.textContent='✦  Opening Email Client  ✦';
   submitBtn.style.background='linear-gradient(135deg,#3a6b2e 0%,#52993e 100%)';
   submitBtn.style.color='#fff';
   setTimeout(()=>{
