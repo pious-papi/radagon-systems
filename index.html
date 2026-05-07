@@ -814,13 +814,26 @@ window.addEventListener('scroll',()=>{
 
 // Contact form email
 const CONTACT_EMAIL='contact@radagon.systems';
+// Conservative limit for mailto URLs across common browsers/clients.
+const MAILTO_MAX_LENGTH=1900;
+const sanitizeField=value=>value.replace(/[\r\n]+/g,' ').trim();
+const openMailto=url=>{
+  const mailtoLink=document.createElement('a');
+  mailtoLink.href=url;
+  mailtoLink.style.display='none';
+  document.body.appendChild(mailtoLink);
+  mailtoLink.click();
+  setTimeout(()=>{
+    document.body.removeChild(mailtoLink);
+  },100);
+};
 const contactForm=document.getElementById('contact-form');
 const submitBtn=document.getElementById('submit-btn');
 contactForm.addEventListener('submit',function(e){
   e.preventDefault();
-  const name=document.getElementById('contact-name').value.trim();
-  const company=document.getElementById('contact-company').value.trim();
-  const email=document.getElementById('contact-email').value.trim();
+  const name=sanitizeField(document.getElementById('contact-name').value);
+  const company=sanitizeField(document.getElementById('contact-company').value);
+  const email=sanitizeField(document.getElementById('contact-email').value);
   const message=document.getElementById('contact-message').value.trim();
   const bodyLines=[
     `Name: ${name}`,
@@ -838,7 +851,7 @@ contactForm.addEventListener('submit',function(e){
     submitBtn.style.background='';
     submitBtn.style.color='';
   };
-  if(mailto.length>1900){
+  if(mailto.length>MAILTO_MAX_LENGTH){
     submitBtn.textContent='✦  Message Too Long  ✦';
     submitBtn.style.background='linear-gradient(135deg,#7b2d2d 0%,#a23d3d 100%)';
     submitBtn.style.color='#fff';
@@ -848,14 +861,7 @@ contactForm.addEventListener('submit',function(e){
   submitBtn.textContent='✦  Preparing Message  ✦';
   submitBtn.style.background='linear-gradient(135deg,#3a6b2e 0%,#52993e 100%)';
   submitBtn.style.color='#fff';
-  const mailtoLink=document.createElement('a');
-  mailtoLink.href=mailto;
-  mailtoLink.style.display='none';
-  document.body.appendChild(mailtoLink);
-  mailtoLink.click();
-  setTimeout(()=>{
-    document.body.removeChild(mailtoLink);
-  },100);
+  openMailto(mailto);
   setTimeout(resetButton,3000);
 });
 </script>
