@@ -833,13 +833,12 @@ contactForm.addEventListener('submit',function(e){
   const subject='New Contact Form Submission';
   const mailto=`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
   const orig=submitBtn.textContent;
-  submitBtn.textContent='✦  Opening Email Client  ✦';
+  submitBtn.textContent='✦  Preparing Message  ✦';
   submitBtn.style.background='linear-gradient(135deg,#3a6b2e 0%,#52993e 100%)';
   submitBtn.style.color='#fff';
-  const mailtoWindow=window.open(mailto);
-  if(!mailtoWindow){
+  setTimeout(()=>{
     window.location.href=mailto;
-  }
+  },100);
   setTimeout(()=>{
     submitBtn.textContent=orig;
     submitBtn.style.background='';
