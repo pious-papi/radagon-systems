@@ -813,6 +813,7 @@ window.addEventListener('scroll',()=>{
 });
 
 // Contact form email
+const CONTACT_EMAIL='contact@radagon.systems';
 const contactForm=document.getElementById('contact-form');
 const submitBtn=document.getElementById('submit-btn');
 contactForm.addEventListener('submit',function(e){
@@ -830,8 +831,8 @@ contactForm.addEventListener('submit',function(e){
     message
   ];
   const subject='New Contact Form Submission';
-  const mailto=`mailto:contact@radagon.systems?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
-  window.open(mailto,'_blank');
+  const mailto=`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+  window.location.href=mailto;
   const orig=submitBtn.textContent;
   submitBtn.textContent='✦  Opening Email Client  ✦';
   submitBtn.style.background='linear-gradient(135deg,#3a6b2e 0%,#52993e 100%)';
