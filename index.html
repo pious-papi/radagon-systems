@@ -756,27 +756,27 @@ footer {
       <p class="section-sub">Tell us about your business and the challenges you are looking to solve. We typically respond within 24 hours.</p>
     </div>
     <div class="contact-inner">
-      <div class="contact-form reveal">
+      <form class="contact-form reveal" id="contact-form">
         <div class="form-2col form-row">
           <div>
-            <label class="form-label">Your Name</label>
-            <input class="form-input" type="text" placeholder="Full name">
+            <label class="form-label" for="contact-name">Your Name</label>
+            <input class="form-input" id="contact-name" name="name" type="text" placeholder="Full name" autocomplete="name" maxlength="100" required>
           </div>
           <div>
-            <label class="form-label">Company</label>
-            <input class="form-input" type="text" placeholder="Organisation">
+            <label class="form-label" for="contact-company">Company</label>
+            <input class="form-input" id="contact-company" name="company" type="text" placeholder="Organisation" autocomplete="organization" maxlength="100">
           </div>
         </div>
         <div class="form-row">
-          <label class="form-label">Email Address</label>
-          <input class="form-input" type="email" placeholder="you@company.com">
+          <label class="form-label" for="contact-email">Email Address</label>
+          <input class="form-input" id="contact-email" name="email" type="email" placeholder="you@company.com" autocomplete="email" maxlength="254" required>
         </div>
         <div class="form-row">
-          <label class="form-label">Message</label>
-          <textarea class="form-textarea" rows="5" placeholder="Describe your current workflows, the tools you use, and where you feel the most friction..."></textarea>
+          <label class="form-label" for="contact-message">Message</label>
+          <textarea class="form-textarea" id="contact-message" name="message" rows="5" placeholder="Describe your current workflows, the tools you use, and where you feel the most friction..." maxlength="1000" required></textarea>
         </div>
-        <button class="form-submit" id="submit-btn">Send Message</button>
-      </div>
+        <button class="form-submit" id="submit-btn" type="submit">Send Message</button>
+      </form>
       <p class="contact-note reveal">Prefer a call? Mention it in your message and we will send a booking link.</p>
     </div>
   </div>
@@ -812,18 +812,57 @@ window.addEventListener('scroll',()=>{
   document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
 });
 
-// Form feedback
-document.getElementById('submit-btn').addEventListener('click',function(e){
-  e.preventDefault();
-  const orig=this.textContent;
-  this.textContent='✦  Message Sent  ✦';
-  this.style.background='linear-gradient(135deg,#3a6b2e 0%,#52993e 100%)';
-  this.style.color='#fff';
+// Contact form email
+const CONTACT_EMAIL='contact@radagon.systems';
+// Conservative limit below common ~2048 URL caps to allow for encoding overhead.
+const MAILTO_MAX_LENGTH=1900;
+const sanitizeField=value=>value.replace(/[\r\n]+/g,' ').trim();
+const openMailto=url=>{
+  const mailtoLink=document.createElement('a');
+  mailtoLink.href=url;
+  mailtoLink.style.display='none';
+  document.body.appendChild(mailtoLink);
+  mailtoLink.click();
   setTimeout(()=>{
-    this.textContent=orig;
-    this.style.background='';
-    this.style.color='';
-  },3000);
+    document.body.removeChild(mailtoLink);
+  },100);
+};
+const contactForm=document.getElementById('contact-form');
+const submitBtn=document.getElementById('submit-btn');
+contactForm.addEventListener('submit',function(e){
+  e.preventDefault();
+  const name=sanitizeField(document.getElementById('contact-name').value);
+  const company=sanitizeField(document.getElementById('contact-company').value);
+  const email=sanitizeField(document.getElementById('contact-email').value);
+  const message=document.getElementById('contact-message').value.trim();
+  const bodyLines=[
+    `Name: ${name}`,
+    `Company: ${company || 'Not provided'}`,
+    `Email: ${email}`,
+    '',
+    'Message:',
+    message
+  ];
+  const subject='New Contact Form Submission';
+  const mailto=`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+  const orig=submitBtn.textContent;
+  const resetButton=()=>{
+    submitBtn.textContent=orig;
+    submitBtn.style.background='';
+    submitBtn.style.color='';
+  };
+  if(mailto.length>MAILTO_MAX_LENGTH){
+    submitBtn.textContent='✦  Message Too Long  ✦';
+    submitBtn.style.background='linear-gradient(135deg,#7b2d2d 0%,#a23d3d 100%)';
+    submitBtn.style.color='#fff';
+    setTimeout(resetButton,3000);
+    return;
+  }
+  submitBtn.textContent='✦  Preparing Message  ✦';
+  submitBtn.style.background='linear-gradient(135deg,#3a6b2e 0%,#52993e 100%)';
+  submitBtn.style.color='#fff';
+  openMailto(mailto);
+  setTimeout(resetButton,3000);
 });
 </script>
 </body>
